@@ -1,8 +1,9 @@
 CC=gcc
-CFLAGS=-O0
-APP=get_stack
+CFLAGS=-Wall -Werror -O0 -m64 -mpreferred-stack-boundary=4 -fno-stack-protector
+LDFLASG=-static -z execstack
+APP=naive
 
-OBJS=get_stack.o
+OBJS=naive.o
 
 MACHINE:="$(shell gcc -dumpmachine)"
 SUPPORTED:="x86_64-linux-gnu"
@@ -32,7 +33,7 @@ endif
 all: $(APP)
 
 $(APP): $(OBJS) verify_targets
-	$(CC) -o $@ $(OBJS)
+	$(CC) -o $@ $(LDFLASG) $(OBJS)
 
 verify_targets:
 	$(call assert_machine)
