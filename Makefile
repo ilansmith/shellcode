@@ -1,9 +1,12 @@
 CC=gcc
-CFLAGS=-O0
-APP=print_stack
-ALL_APPS=get_stack print_stack
+CFLAGS=-Wall -Werror -O0 -m64 -mpreferred-stack-boundary=4 \
+       -fno-stack-protector -DCONFIG_DEMO
+LDFLASG=-static -z execstack
+APP=naive
+ALL_APPS=get_stack print_stack naive
 
 OBJS_PRINT_STACK=print_stack.o
+OBJS_NAIVE=naive.o
 
 MACHINE:="$(shell gcc -dumpmachine)"
 SUPPORTED:="x86_64-linux-gnu"
@@ -20,7 +23,7 @@ CONFIG_GET_STACK=n
 CONFIG_DEBUG=n
 
 ifeq ($(CONFIG_GET_STACK),y)
-    OBJS+=get_stack_args.o
+    OBJS_NAIVE+=get_stack_args.o
     CFLAGS+=-DGET_STACK
 endif
 
@@ -37,6 +40,9 @@ endif
 .PHONY: all verify_targets clean cleanall
 
 all: $(APP)
+
+naive: $(OBJS_NAIVE) verify_targets
+	$(CC) -o $@ $(LDFLASG) $(OBJS_NAIVE)
 
 print_stack: $(OBJS_PRINT_STACK) verify_targets
 	$(CC) -o $@ $(LDFLASG) $<

@@ -1,9 +1,38 @@
 # shellcode
-A step by step development of a stack based buffer overflow attack and the
-shellcode exploit.
 
-Each stage of the shellcode development is done as a separete commit -
-explained in depth in the stage's commit message.
+"normal" use case                         stack overflow attack
 
-The specific shellcode developped in this project targets Intel x86_64
-architecture but the guideline principals always apply.
+|                |                        |                |
+|-stack frame A--|                        |-stack frame A--|
+| ...            |                        | ...            |
+|                |                        |                |
+|return addr     |                       /|&buffer         |
+|-stack frame B--| <-- $rbp             e |xxxxxxxxxxxxxxxx|
+|                |                      x |xxxxxxxxxxxxxxxx|
+|                |                      e |^%?/bin/shxxxxxx|
+|                |                      c |)$%&@!~)*&&%~_#!|
+|                |                      v |xx&!#@#(~~*@(^^^|
+|                |                      e |xxxxxxxxxxxxxxxx|
+|hello world     | <-- buffer            \|xxxxxxxxxxxxxxxx| <-- return address
+|----------------| <-- $rsp               |----------------|
+|                |                        |                |
+|                |                        |                |
+|                |                        |                |
+| .text          |                        | .text          |
+|                |                        |                |
+|----func B------|                        |----func B------|
+| ...            | <-- $rip               | ...            |
+|                |                        |                |
+| return         |                        | return         |
+|----------------|                        |----------------|
+|                |                        |                |
+|                |                        |                |
+|----func A------|                        |----func A------|
+| ...            |                        | ...            |
+|                |                        |                |
+| @call func B   |                        | @call func B   |
+| ...            | <-- return address --> | ...            |
+|                |                        |                |
+|----------------|                        |                |
+|                |                        |                |
++----------------+                        +----------------+
