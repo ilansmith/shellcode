@@ -1,8 +1,9 @@
 CC=gcc
-CFLAGS=-Wall -Werror -O0 -m64 -mpreferred-stack-boundary=4 -fno-stack-protector
-APP=quiz
+CFLAGS=-Wall -Werror -O0 -m64
+LDFLASG=-static
+APP=naive
 
-OBJS=quiz.o
+OBJS=naive.o
 
 MACHINE:="$(shell gcc -dumpmachine)"
 SUPPORTED:="x86_64-linux-gnu"
@@ -32,7 +33,7 @@ endif
 all: $(APP)
 
 $(APP): $(OBJS) verify_targets
-	$(CC) -o $@ $(OBJS)
+	$(CC) -o $@ $(LDFLASG) $(OBJS)
 
 verify_targets:
 	$(call assert_machine)
