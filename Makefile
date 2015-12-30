@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Werror -O0 -m64 -mpreferred-stack-boundary=4 -fno-stack-protector
+CFLAGS=-Wall -Werror -O0 -m64 -mpreferred-stack-boundary=6 -fno-stack-protector
 LDFLASG=-static -z execstack
 APP=naive
 ALL_APPS=get_stack print_stack quiz naive
