@@ -1,5 +1,26 @@
+#undef ASSEMBLY
+
+#if !defined(ASSEMBLY)
+char my_execve[] =
+	"\x48\x8d\x05\x20\x00\x00\x00"          /* lea    0x20(%rip),%rax    */
+	"\xff\xe0"                              /* jmpq   *%rax              */
+	"\x48\xc7\x44\x24\x08\x00\x00\x00\x00"  /* movq   $0x0,0x8(%rsp)     */
+	"\x48\x8b\x3c\x24"                      /* mov    (%rsp),%rdi        */
+	"\x48\x89\xe6"                          /* mov    %rsp,%rsi          */
+	"\x48\xc7\xc2\x00\x00\x00\x00"          /* mov    $0x0,%rdx          */
+	"\xb8\x3b\x00\x00\x00"                  /* mov    $0x3b,%eax         */
+	"\x0f\x05"                              /* syscall                   */
+	"\x48\x8d\x05\xdb\xff\xff\xff"          /* lea    -0x25(%rip),%rax   */
+	"\xff\xd0"                              /* callq  *%rax              */
+	"\x2f\x62\x69\x6e\x2f\x73\x68\x00"      /* .string \"/bin/sh\"       */
+	;
+#endif
+
 int main(int argc, char **argv)
 {
+	int ret = 0;
+
+#if defined(ASSEMBLY)
 	__asm__("lea 0x20(%rip),%rax");         /* load 'call' block address
 	                                           to $rax. Note: $rip is
 	                                           that of the next op       */
@@ -21,6 +42,9 @@ int main(int argc, char **argv)
 	                                           jmp instruction           */
 	__asm__(".string \"/bin/sh\"");         /* execution string for
 	                                           execve                    */
-	return 0;
+#else
+	*(((unsigned long*)(&ret + 1)) + 1) = (unsigned long)my_execve;
+#endif
+	return ret;
 }
 

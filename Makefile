@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Werror -O0 -m64
+CFLAGS=-Wall -Werror -O0 -m64 -mpreferred-stack-boundary=4 -fno-stack-protector
 LDFLASG=-static
 APP=naive
 
