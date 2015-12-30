@@ -1,8 +1,7 @@
 CC=gcc
-CFLAGS=-Wall -Werror -O0 -m64 -mpreferred-stack-boundary=4 \
-       -fno-stack-protector -DCONFIG_DEMO
-LDFLASG=-static -z execstack
-APP=quiz
+CFLAGS=-Wall -Werror -O0 -m64
+LDFLASG=-static
+APP=naive
 ALL_APPS=get_stack print_stack quiz naive
 
 OBJS_PRINT_STACK=print_stack.o
