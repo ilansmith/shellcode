@@ -30,3 +30,5 @@
 
 # Debug files
 *.dSYM/
+
+get_stack

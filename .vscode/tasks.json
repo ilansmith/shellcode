@@ -1,0 +1,79 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "Build Release",
+            "command": "make",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Build SDP extractor application."
+        },
+        {
+            "type": "cppbuild",
+            "label": "Build Debug",
+            "command": "make",
+            "args": [
+                "CONFIG_DEBUG=y",
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Build SDP extractor application with debug symbols."
+        },
+        {
+            "type": "cppbuild",
+            "label": "Clean",
+            "command": "make",
+            "args": [
+                "clean",
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "Remove pre compilation files and object files."
+        },
+        {
+            "type": "cppbuild",
+            "label": "Clean All",
+            "command": "make",
+            "args": [
+                "cleanall",
+            ],
+            "options": {
+                "cwd": "${workspaceRoot}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "detail": "Clean all buildable files."
+        },
+    ],
+    "version": "2.0.0"
+}
