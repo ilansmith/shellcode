@@ -2,11 +2,12 @@ CC=gcc
 CFLAGS=-Wall -Werror -O0 -m64 -mpreferred-stack-boundary=4 \
        -fno-stack-protector -DCONFIG_DEMO
 LDFLASG=-static -z execstack
-APP=naive
-ALL_APPS=get_stack print_stack naive
+APP=quiz
+ALL_APPS=get_stack print_stack quiz naive
 
 OBJS_PRINT_STACK=print_stack.o
 OBJS_NAIVE=naive.o
+OBJS_QUIZ=quiz.o
 
 MACHINE:="$(shell gcc -dumpmachine)"
 SUPPORTED:="x86_64-linux-gnu"
@@ -45,6 +46,9 @@ naive: $(OBJS_NAIVE) verify_targets
 	$(CC) -o $@ $(LDFLASG) $(OBJS_NAIVE)
 
 print_stack: $(OBJS_PRINT_STACK) verify_targets
+	$(CC) -o $@ $(LDFLASG) $<
+
+quiz: $(OBJS_QUIZ) verify_targets
 	$(CC) -o $@ $(LDFLASG) $<
 
 verify_targets:
