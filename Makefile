@@ -1,8 +1,9 @@
 CC=gcc
 CFLAGS=-O0
-APP=get_stack
+APP=print_stack
+ALL_APPS=get_stack print_stack
 
-OBJS=get_stack.o
+OBJS_PRINT_STACK=print_stack.o
 
 MACHINE:="$(shell gcc -dumpmachine)"
 SUPPORTED:="x86_64-linux-gnu"
@@ -16,7 +17,7 @@ endef
 # configuration
 # =============
 CONFIG_GET_STACK=n
-CONFIG_DEBUG=y
+CONFIG_DEBUG=n
 
 ifeq ($(CONFIG_GET_STACK),y)
     OBJS+=get_stack_args.o
@@ -24,11 +25,11 @@ ifeq ($(CONFIG_GET_STACK),y)
 endif
 
 ifeq ($(CONFIG_DEBUG),y)
-    CFLAGS+=-ggdb
+    CFLAGS+=-ggdb -DDEBUG
 endif
 
-%: %.c
-	$(GCC) -o $@ $(CFLAGS) $<
+%.o: %.c
+	$(CC) -o $@ $(CFLAGS) -c $<
 
 %_pre.c: %.c
 	$(CPP) -x c -o $@ $<
@@ -37,15 +38,15 @@ endif
 
 all: $(APP)
 
-$(APP): $(OBJS) verify_targets
-	$(CC) -o $@ $(OBJS)
+print_stack: $(OBJS_PRINT_STACK) verify_targets
+	$(CC) -o $@ $(LDFLASG) $<
 
 verify_targets:
 	$(call assert_machine)
 
 clean:
 	@echo "removing executables"
-	@rm -f $(APP)
+	@rm -f $(ALL_APPS)
 	@echo "removing object files"
 	@rm -f *.o
 

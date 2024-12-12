@@ -7,12 +7,16 @@ extern void *ret_addr;
 extern void *rbp;
 extern void *rsp;
 
-#define get_stack() do { \
-	printf("%s():\n", __FUNCTION__); \
+#define copy_regs() do { \
 	__asm__("mov 0x8(%%rbp), %0" : "=r"(ret_addr)); \
 	__asm__("mov %%rbp, %0" : "=r"(rbp)); \
 	__asm__("mov %%rsp, %0" : "=r"(rsp)); \
-	printf("  $rbp + 8:   %#018lx (return addr)\n", \
+} while (0)
+
+#define get_stack() do { \
+	copy_regs(); \
+	printf("%s():\n", __FUNCTION__); \
+	printf("  *($rbp+8):   %#018lx (return addr)\n", \
 		(unsigned long)ret_addr); \
 	printf("  $rbp:       %#018lx\n", (unsigned long)rbp); \
 	printf("  ...\n"); \
@@ -20,17 +24,17 @@ extern void *rsp;
 } while (0)
 
 #define get_stack_var(_var_) do { \
+	copy_regs(); \
 	printf("%s():\n", __FUNCTION__); \
-	__asm__("mov 0x8(%%rbp), %0" : "=r"(ret_addr)); \
-	__asm__("mov %%rbp, %0" : "=r"(rbp)); \
-	__asm__("mov %%rsp, %0" : "=r"(rsp)); \
-	printf("  $rbp + 8:   %#018lx (return addr)\n", \
-		(unsigned long)ret_addr); \
-	printf("  $rbp:       %#018lx\n", (unsigned long)rbp); \
+	printf("%-16s", "  *($rbp+8):"); \
+	printf("%#018lx (return addr)\n", (unsigned long)ret_addr); \
+	printf("%-16s", "  $rbp:"); \
+	printf("%#018lx\n", (unsigned long)rbp); \
 	printf("  ...\n"); \
-	printf("  &" # _var_ ":       %#018lx (variable on stack)\n", \
-		(unsigned long)&_var_); \
-	printf("  $rsp:       %#018lx\n", (unsigned long)rsp); \
+	printf("%-16s", "  &" # _var_ ":"); \
+	printf("%#018lx (variable on stack)\n", (unsigned long)&_var_); \
+	printf("%-16s", "  $rsp:"); \
+	printf("%#018lx\n", (unsigned long)rsp); \
 } while (0)
 #endif
 

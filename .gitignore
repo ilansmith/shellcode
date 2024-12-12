@@ -32,3 +32,4 @@
 *.dSYM/
 
 get_stack
+print_stack
