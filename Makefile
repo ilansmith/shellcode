@@ -15,7 +15,13 @@ endef
 
 # configuration
 # =============
+CONFIG_GET_STACK=n
 CONFIG_DEBUG=y
+
+ifeq ($(CONFIG_GET_STACK),y)
+    OBJS+=get_stack_args.o
+    CFLAGS+=-DGET_STACK
+endif
 
 ifeq ($(CONFIG_DEBUG),y)
     CFLAGS+=-ggdb
